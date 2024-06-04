@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import liff from '@line/liff';
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    const initializeLiff = async () => {
+      try {
+        await liff.init({ liffId: process.env.REACT_APP_LIFF_ID });
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          const profile = await liff.getProfile();
+          console.log(profile);
+        }
+      } catch (error) {
+        console.error('LIFF Initialization failed', error);
+      }
+    };
+    initializeLiff();
+  },
+  []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>LIFF Login with React</h1>
+      <p>Check the console for profile information after login.</p>
     </div>
   );
-}
+};
 
 export default App;
